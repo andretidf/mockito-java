@@ -15,6 +15,9 @@ public class FinalizarLeilaoService {
 	@Autowired
 	private LeilaoDao leiloes;
 
+	@Autowired
+	private EnviadorDeEmails enviadorDeEmails;
+
 	public void finalizarLeiloesExpirados() {
 		List<Leilao> expirados = leiloes.buscarLeiloesExpirados();
 		expirados.forEach(leilao -> {
@@ -22,6 +25,7 @@ public class FinalizarLeilaoService {
 			leilao.setLanceVencedor(maiorLance);
 			leilao.fechar();
 			leiloes.salvar(leilao);
+			enviadorDeEmails.enviarEmailVencedorLeilao(maiorLance);
 		});
 	}
 
